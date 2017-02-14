@@ -31,8 +31,8 @@ use File::Path;
 use Getopt::Long;
 
 # Constants
-use constant $PIXELS_TO_CM => 0.02644;
-use constant $PIXELS_TO_IN => 0.02644 * 0.393701;
+use constant PIXELS_TO_CM => 0.02644;
+use constant PIXELS_TO_IN => 0.02644 * 0.393701;
 
 # variable depends
 my $USE_IMAGE_MAGICK = 0;
@@ -403,7 +403,7 @@ do # post processing of content
 				$data=$input_dir . "/" . $data unless $data=~/^\//;
 
 				my $raw_width = get_image_width($USE_IMAGE_MAGICK, $data);
-				my $width = ($raw_width * $PIXELS_TO_CM) . "cm";
+				my $width = ($raw_width * PIXELS_TO_CM) . "cm";
 				print "  width='$width'\n" if $debug;
 				$content=~s|<!TMP!>|$width|;
 				next;
@@ -414,7 +414,7 @@ do # post processing of content
 				$data = $input_dir . "/" . $data unless $data=~/^\//;
 
 				my $raw_height = get_image_height($USE_IMAGE_MAGICK, $data);
-				my $height = ($raw_height * $PIXELS_TO_CM) . "cm";
+				my $height = ($raw_height * PIXELS_TO_CM) . "cm";
 				print "  height='$height'\n" if $debug;
 				$content=~s|<!TMP!>|$height|;
 				next;
@@ -436,7 +436,7 @@ do # post processing of content
 				if ($raw_height > 0 || $raw_width > 0)
 				{
 					my $width = $given_height / $raw_height * $raw_width;
-					$width = ($width * $PIXELS_TO_CM) . "cm";
+					$width = ($width * PIXELS_TO_CM) . "cm";
 					print "  width='$width'\n" if $debug;
 					$content=~s|<!TMP!>|$width|;
 					next;
@@ -459,7 +459,7 @@ do # post processing of content
 				if ($raw_height > 0 && $raw_width > 0)
 				{
 					my $height = $given_width / $raw_width * $raw_height;
-					$height = ($height * $PIXELS_TO_CM) . "cm";
+					$height = ($height * PIXELS_TO_CM) . "cm";
 					print "  height='$height'\n" if $debug;
 					$content=~s|<!TMP!>|$height|;
 					next;
@@ -596,7 +596,7 @@ sub img_dimmensions
 	
 	rmtree($tmpdir);
 	
-	($data =~ /PNG image data, (\d+) x (\d+)/) and return (($1*$PIXELS_TO_CM)."cm", ($2*$PIXELS_TO_CM)."cm");
+	($data =~ /PNG image data, (\d+) x (\d+)/) and return (($1*PIXELS_TO_CM)."cm", ($2*PIXELS_TO_CM)."cm");
 	return ("3cm","3cm");
 }
 
@@ -686,12 +686,12 @@ sub to_pixels
 
 	if ($value =~ s/\s*cm$//i)
 	{
-		$value /= $PIXELS_TO_CM;
+		$value /= PIXELS_TO_CM;
 	}
 
 	if ($value =~ s/\s*in$//i)
 	{
-		$value /= $PIXELS_TO_IN;
+		$value /= PIXELS_TO_IN;
 	}
 
 	return $value + 0.0;
