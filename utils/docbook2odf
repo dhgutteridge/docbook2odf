@@ -52,7 +52,7 @@ elsif (eval "require XML::LibXSLT;")
 }
 
 my $USE_ZIP = 0;
-if (eval "require Archive::Zip qw( :ERROR_CODES :CONSTANTS )")
+if (eval "require Archive::Zip;")
 {
 	$USE_ZIP = 1;
 }
