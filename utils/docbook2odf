@@ -31,8 +31,8 @@ use File::Path;
 use Getopt::Long;
 
 # Constants
-my $PIXELS_TO_CM = 0.02644;
-my $PIXELS_TO_IN = 0.02644 * 0.393701;
+use constant $PIXELS_TO_CM => 0.02644;
+use constant $PIXELS_TO_IN => 0.02644 * 0.393701;
 
 # variable depends
 my $USE_IMAGE_MAGICK = 0;
@@ -550,10 +550,10 @@ print "Saved $output_file\n" unless $quiet;
 # CLEANING
 ##################################################################################
 
+print "delete temporary directory='$TEMP' (PWD='$PATH') would be done\n" if $debug;
 if (!$debug)
 {
 	# delete temporary directory
-	print "delete temporary directory='$TEMP' (PWD='$PATH')\n" if $debug;
 	chdir '..';
 	rmtree $TEMP;
 }
