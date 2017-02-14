@@ -469,7 +469,7 @@ do # post processing of content
 		elsif ($function eq "getimage-width" || $function eq "getimage-height")
 		{
 			$data=$input_dir."/".$data unless $data=~/^\//;
-			my ($width, $height) = img_dimmensions($data);
+			my ($width, $height) = img_dimensions($data);
 			print "output='$width'\n" if $debug;
 			print "output='$height'\n" if $debug;
 			($function=~/width/) and $content=~s|<!TMP!>|$width|;
@@ -567,7 +567,7 @@ if (!$debug)
 ##################################################################################
 
 
-sub img_dimmensions
+sub img_dimensions
 {
 	my $imgfile = shift;
 	my $tmpdir = "/tmp/docbook2odf-$$-".int(100*rand());
@@ -591,7 +591,7 @@ sub img_dimmensions
 	}
 	$imgfile = "$tmpdir/img-file.png";
 	
-	# Get the image dimmensions.
+	# Get the image dimensions.
 	my $data = `file $imgfile`;
 	
 	rmtree($tmpdir);
@@ -651,7 +651,7 @@ sub xml_process
 			$PARAM .= " --stringparam $name $val ";
 		}
 		$XML_DOC=~s| |\\ |g;
-#		my $cmd="xsltproc --xinclude $PARAM $XSL $XML_DOC";
+
 		my $cmd="xsltproc --xinclude $PARAM $XSL $XML_DOC";
 		print "$cmd\n" if $debug;
 		return `$cmd`;
