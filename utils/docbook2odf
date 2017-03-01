@@ -696,5 +696,3 @@ sub to_pixels
 
 	return $value + 0.0;
 }
-
-1;
