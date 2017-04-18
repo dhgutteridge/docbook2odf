@@ -34,23 +34,58 @@ use Getopt::Long;
 use constant PIXELS_TO_CM => 0.02644;
 use constant PIXELS_TO_IN => 0.02644 * 0.393701;
 
-# variable depends
+# Dependency checks
+
+# Some image graphics functionality is required, though some dimension
+# calculations aren't performed if ImageMagick isn't available.
 my $USE_IMAGE_MAGICK = 0;
 if (eval "require Image::Magick")
 {
 	$USE_IMAGE_MAGICK = 1;
 }
+else
+{
+	my ($gif2png, $anytopnm);
 
+	# For command line utility checks, we're assuming a POSIX environment
+	# with a compliant (Bourne-like) shell. Environments like native
+	# Windows are unsupported.
+
+	# which(1) is necessary because gif2png returns exit code 1 with
+	# the -v flag, and anytopnm doesn't offer any usable flags.
+	# (command[1] is the POSIX equivalent of which[1], but actually
+	# isn't portable in practice.)
+	$gif2png = system("/usr/bin/env which gif2png >/dev/null 2&>1");
+	$anytopnm = system("/usr/bin/env which anytopnm >/dev/null 2&>1");
+
+	if ($gif2png || $anytopnm)
+	{
+		die "docbook2odf: Error: neither Perl's Image::Magick nor the gif2png and/or anytopnm utilities are installed.";
+	}
+}
+
+# An XSLT processor is required
 my $USE_LIBXSLT = 0;
 if (eval "require XML::LibXSLT;")
 {
 	$USE_LIBXSLT = 1;
 }
+else
+{
+	system("/usr/bin/env which xsltproc >/dev/null 2&>1") == 0
+		or die "docbook2odf: Error: neither Perl's XML::LibXSLT nor the xsltproc utility are installed.";
+}
 
+# Zip capabilities are required
 my $USE_ZIP = 0;
 if (eval "require Archive::Zip;")
 {
 	$USE_ZIP = 1;
+}
+else
+{
+	system("/usr/bin/env which zip >/dev/null 2&>1") == 0
+		or die "docbook2odf: Error: neither Perl's Archive::Zip nor the zip utility are installed.";
 }
 
 ################################################################
@@ -93,7 +128,7 @@ my $result = GetOptions
 		"help"           => \$help,
 		"f|force"        => \$force,
 	);
-my $input = $ARGV[0];
+$input = $ARGV[0];
 
 if ($help)
 {
@@ -398,7 +433,7 @@ do # post processing of content
 			{
 				$data=$input_dir . "/" . $data unless $data=~/^\//;
 
-				my $raw_width = get_image_width($USE_IMAGE_MAGICK, $data);
+				my $raw_width = get_image_width($data);
 				my $width = ($raw_width * PIXELS_TO_CM) . "cm";
 				print "  width='$width'\n" if $debug;
 				$content=~s|<!TMP!>|$width|;
@@ -409,7 +444,7 @@ do # post processing of content
 			{
 				$data = $input_dir . "/" . $data unless $data=~/^\//;
 
-				my $raw_height = get_image_height($USE_IMAGE_MAGICK, $data);
+				my $raw_height = get_image_height($data);
 				my $height = ($raw_height * PIXELS_TO_CM) . "cm";
 				print "  height='$height'\n" if $debug;
 				$content=~s|<!TMP!>|$height|;
@@ -424,8 +459,8 @@ do # post processing of content
 				$data = $filename;
 				$data = $input_dir . "/" . $data unless $data=~/^\//;
 
-				my $raw_height = get_image_height($USE_IMAGE_MAGICK, $data);
-				my $raw_width = get_image_width($USE_IMAGE_MAGICK, $data);
+				my $raw_height = get_image_height($data);
+				my $raw_width = get_image_width($data);
 
 				print "  ratio h=$raw_height, w=$raw_width, gh=$given_height\n" if $debug;
 
@@ -447,8 +482,8 @@ do # post processing of content
 				$data = $filename;
 				$data = $input_dir . "/" . $data unless $data=~/^\//;
 
-				my $raw_height = get_image_height($USE_IMAGE_MAGICK, $data);
-				my $raw_width = get_image_width($USE_IMAGE_MAGICK, $data);
+				my $raw_height = get_image_height($data);
+				my $raw_width = get_image_width($data);
 
 				print "  ratio h=$raw_height, w=$raw_width, gw=$given_width\n" if $debug;
 
@@ -642,7 +677,6 @@ sub xml_process
 
 sub get_image_width
 {
-	my $USE_IMAGE_MAGIC = shift @_;
 	my $data = shift @_;
 	
 	my $p = new Image::Magick;
@@ -653,7 +687,6 @@ sub get_image_width
 
 sub get_image_height
 {
-	my $USE_IMAGE_MAGIC = shift @_;
 	my $data = shift @_;
 	
 	my $p = new Image::Magick;
