@@ -14,6 +14,34 @@ this project may also be useful for maintaining the existing DocBook 4
 support for those still using that version, since the original upstream
 project appears to be long abandoned.
 
+## Dependencies
+
+Perl's [Image::Magick](https://metacpan.org/pod/Image::Magick), or
+alternately both [gif2png](http://www.catb.org/esr/gif2png/) and
+[Netpbm](http://netpbm.sourceforge.net/) (for the
+[anytopnm](http://netpbm.sourceforge.net/doc/anytopnm.html) utility,
+specifically).
+
+Perl's [XML::LibXSLT](https://metacpan.org/pod/XML::LibXSLT), or
+alternately [libxslt](http://xmlsoft.org/libxslt/) (for the
+[xsltproc](http://xmlsoft.org/libxslt/xsltproc2.html) utility,
+specifically).
+
+Perl's [Archive::Zip](https://metacpan.org/pod/Archive::Zip), or
+alternately the [zip](http://www.info-zip.org/Zip.html) utility.
+
+It is recommended that the Perl module dependencies be satisfied for
+optimal performance.
+
+## Compatibility
+
+At present, some code paths won't run in non-POSIX environments (e.g.
+native MS Windows), because there are Unix-like assumptions scattered
+throughout the command line invocations. All of this will ultimately be
+replaced with use of the standard Perl module
+[IPC::Cmd](http://perldoc.perl.org/IPC/Cmd.html), which provides
+portability.
+
 ## License
 
 docbook2odf is free software; you can redistribute it and/or modify it
