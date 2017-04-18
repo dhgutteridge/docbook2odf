@@ -38,15 +38,11 @@ use constant PIXELS_TO_IN => 0.02644 * 0.393701;
 my $USE_IMAGE_MAGICK = 0;
 if (eval "require Image::Magick")
 {
-       $USE_IMAGE_MAGICK = 1;
+	$USE_IMAGE_MAGICK = 1;
 }
-my $USE_SABLOTRON = 0;
+
 my $USE_LIBXSLT = 0;
-if (eval "require XML::Sablotron;")
-{
-	$USE_SABLOTRON = 1;
-}
-elsif (eval "require XML::LibXSLT;")
+if (eval "require XML::LibXSLT;")
 {
 	$USE_LIBXSLT = 1;
 }
@@ -606,24 +602,10 @@ sub xml_process
 {
 	my $XSL = shift;
 	my $XML_DOC = shift;
-	
+
 	print "param = @_\n" if $debug;
-	
-	if ($USE_SABLOTRON)
-	{
-		print "xslt by sablotron\n" if $debug;
-		my $sab = new XML::Sablotron();
-		my $situa = new XML::Sablotron::Situation();
-		while (@_)
-		{
-			my $name = shift;
-			my $val  = shift;
-			$sab->addParam($situa, $name, $val);
-		}
-		$sab->process($situa, $XSL, $XML_DOC, 'arg:/output');
-		return $sab->getResultArg('arg:/output');
-	}
- 	elsif ($USE_LIBXSLT)
+
+	if ($USE_LIBXSLT)
  	{
  		print "xslt by libxslt\n" if $debug;
 		my $xslt = XML::LibXSLT->new();
