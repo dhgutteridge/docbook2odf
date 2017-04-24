@@ -24,11 +24,12 @@ use strict;
 #use encoding 'utf-8';
 #use open ':utf8', ':std';
 
-# depends on
+# Dependencies
 use Cwd;
 use File::Copy;
 use File::Path;
 use Getopt::Long;
+use IPC::Cmd qw(can_run);
 
 # Constants
 use constant PIXELS_TO_CM => 0.02644;
@@ -47,18 +48,10 @@ else
 {
 	my ($gif2png, $anytopnm);
 
-	# For command line utility checks, we're assuming a POSIX environment
-	# with a compliant (Bourne-like) shell. Environments like native
-	# Windows are unsupported.
+	$gif2png = can_run("gif2png");
+	$anytopnm = can_run("anytopnm");
 
-	# which(1) is necessary because gif2png returns exit code 1 with
-	# the -v flag, and anytopnm doesn't offer any usable flags.
-	# (command[1] is the POSIX equivalent of which[1], but actually
-	# isn't portable in practice.)
-	$gif2png = system("/usr/bin/env which gif2png >/dev/null 2&>1");
-	$anytopnm = system("/usr/bin/env which anytopnm >/dev/null 2&>1");
-
-	if ($gif2png || $anytopnm)
+	if (!defined($gif2png) || !defined($anytopnm))
 	{
 		die "docbook2odf: Error: neither Perl's Image::Magick nor the gif2png and/or anytopnm utilities are installed.";
 	}
@@ -72,8 +65,10 @@ if (eval "require XML::LibXSLT;")
 }
 else
 {
-	system("/usr/bin/env which xsltproc >/dev/null 2&>1") == 0
-		or die "docbook2odf: Error: neither Perl's XML::LibXSLT nor the xsltproc utility are installed.";
+	if(!defined(can_run("xsltproc")))
+	{
+		die "docbook2odf: Error: neither Perl's XML::LibXSLT nor the xsltproc utility are installed.";
+	}
 }
 
 # Zip capabilities are required
@@ -84,8 +79,10 @@ if (eval "require Archive::Zip;")
 }
 else
 {
-	system("/usr/bin/env which zip >/dev/null 2&>1") == 0
-		or die "docbook2odf: Error: neither Perl's Archive::Zip nor the zip utility are installed.";
+	if(!defined(can_run("zip")))
+	{
+		die "docbook2odf: Error: neither Perl's Archive::Zip nor the zip utility are installed.";
+	}
 }
 
 ################################################################
@@ -113,8 +110,8 @@ our $program_Id='$Id$';
 $program_Rev=~/(\d+)/;
 my $program_version="0.".$1;
 my $program_name="docbook2odf ".$program_version;
-my $program_description="a non-interactive docbook to opendocument convertor";
-my $program_usage="docbookfile [-o opendocumentfile]";# [--params]";
+my $program_description="a non-interactive DocBook to OpenDocument convertor";
+my $program_usage="DocBook-file [-o OpenDocument-file]";# [--params]";
 
 my $result = GetOptions
 	(
