@@ -1,35 +1,47 @@
-.TH docbook2odf 1  "April 17, 2017" "version 0.244" "USER COMMANDS"
+.TH docbook2odf 1  "May 7, 2017" "version 0.245" "USER COMMANDS"
 .SH NAME
 docbook2odf \- Convert a DocBook document to OASIS OpenDocument format
 .SH SYNOPSIS
 .B docbook2odf
-[\-\-help] \-\-input\-file [\-\-output\-file]
+[\fI\,OPTION\/\fR]... [\fI\,FILE\/\fR]
 .SH DESCRIPTION
 docbook2odf is a toolkit that automaticaly converts DocBook to OASIS OpenDocument. Conversion is based on XSLT, which makes it easy to convert DocBook to ODF, ODT, ODS, and ODP, as all these documents are XML based.
 .PP
-The result is provided in one zipped ODF file (.odt/.odp/.ods) with all required content. docbook2odf actually universally converts
+The result is provided in one zipped ODF file (.odt/.odp/.ods) with all required content. docbook2odf universally converts
 to these respective formats.
 .SH OPTIONS
 .TP
-\-V
-display the version of docbook2odf and exit.
-.TP
-\-\-input\-file
-specify input DocBook filename.
-.TP
-\-\-output\-file
-specify output OpenDocument filename.
-.TP
-\-\-force
-overwrite existing output filename.
-.TP
-\-\-debug
+\fB-d\fR, \fB\-\-debug\fR
 show debug messages.
 .TP
-\-\-quiet
+\fB-f\fR, \fB\-\-force\fR
+overwrite existing output filename.
+.TP
+\fB-h\fR, \fB\-\-help\fR
+prints help and version.
+.TP
+\fB\-\-output-dir\fR
+specify output directory.
+.TP
+\fB-o\fR, \fB\-\-output\-file\fR
+specify output OpenDocument filename.
+.TP
+\fB-p\fR, \fB\-\-params\fR
+list of params (var=value, var2=value2).
+.TP
+\fB-q\fR, \fB\-\-quiet\fR
 quiet (no output).
 .TP
-\-\-help
-prints short help.
+\fB-v\fR, \fB\-\-verbose\fR
+verbose (extra output).
+.TP
+\fB-x\fR, \fB\-\-xsl-file\fR
+use the specified XSL stylesheet instead.
 .SH AUTHOR
 Roman Fordinal (fordinal (at) webcom.sk)
+.SH COPYRIGHT
+Copyright \(co 2006 Roman Fordinal.
+License GPLv2+: GNU GPL version 2 or later <http://gnu.org/licenses/gpl.html>.
+.br
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
