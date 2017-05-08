@@ -48,8 +48,9 @@ version 2.
 At present, some code paths won't run in non-POSIX environments (e.g.
 native MS Windows), because there are Unix-like assumptions scattered
 throughout the command line invocations, e.g. an expectation that a
-**file** command line utility exists. All of this will ultimately be
-replaced with use of the standard Perl module
+**file** command line utility exists, and that a **TERM** environment
+variable exists. All of this will ultimately be replaced with use of
+the standard Perl module
 [IPC::Cmd](http://perldoc.perl.org/IPC/Cmd.html), which provides
 portability.
 
@@ -57,15 +58,10 @@ Further to the previous point, the code creates temp files in both an
 insecure and non-portable manner, and this should be replaced with use
 of [File::Temp](http://perldoc.perl.org/File/Temp.html).
 
-The man page and the --help output of the Perl script are out of sync
-with regard to the options, e.g. --inputfile and -V. Both the number of
-options and their varied forms need correct annotation.
-
 Unicode support needs consideration.
 
 Other, lesser issues: external commands are called without
-checking the return value or warning if they failed. All exit
-statements should provide error codes. There are multiple points of
-exit that aren't immediately visually apparent. There are whitespace
-issues. There are redundant commented-out blocks. There are comments
-written in the first person.
+checking the return value or warning if they failed. There are multiple
+points of exit that aren't immediately visually apparent. There are
+whitespace issues. There are redundant commented-out blocks. There are
+comments written in the first person.
