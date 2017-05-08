@@ -102,57 +102,52 @@ my ($input, $output, $output_dir);
 my ($help, $quiet, $verbose, $debug);
 my ($params, $force);
 
-our $program_Date='$Date$';
-our $program_Rev='$Rev$';
-our $program_Author='$Author$';
-our $program_Id='$Id$';
-
-$program_Rev=~/(\d+)/;
-my $program_version="0.".$1;
+my $program_version="0.245";
 my $program_name="docbook2odf ".$program_version;
 my $program_description="a non-interactive DocBook to OpenDocument convertor";
-my $program_usage="DocBook-file [-o OpenDocument-file]";# [--params]";
+
+Getopt::Long::Configure("bundling", "ignorecase_always");
 
 my $result = GetOptions
-	(
-		"o|output-file=s"  => \$output,
-		"output-dir=s"   => \$output_dir,
-		"params=s"       => \$params,
-		"xsl-file=s"     => \$PATH_XSL,
-		"debug"          => \$debug,
-		"quiet"          => \$quiet,
-		"verbose"        => \$verbose,
-		"help"           => \$help,
-		"f|force"        => \$force,
-	);
+(
+	"o|output-file=s"  => \$output,
+	"output-dir=s"   => \$output_dir,
+	"p|params=s"       => \$params,
+	"x|xsl-file=s"     => \$PATH_XSL,
+	"d|debug"          => \$debug,
+	"q|quiet"          => \$quiet,
+	"v|verbose"        => \$verbose,
+	"h|help"           => \$help,
+	"f|force"        => \$force,
+);
 $input = $ARGV[0];
 
 if ($help)
 {
 	print "$program_name, $program_description\n";
-	print "Usage: docbook2odf $program_usage\n";
+	print "Usage: docbook2odf DocBook-file\n";
 	print "\n";
 	print <<"HELP";
 Arguments:
-  -o|--output-file    specify output opendocument filename.
+  -o|--output-file    specify output OpenDocument filename.
   --output-dir        specify output directory.
-  --params            list of params ( var=value,var2=value2 ).
-  --xsl-file          use this xsl stylesheet instead.
-  --debug             show debug messages.
+  -p|--params            list of params (var=value, var2=value2).
+  -x|--xsl-file          use the specified XSL stylesheet instead.
+  -d|--debug             show debug messages.
   -q|--quiet             quiet (no output).
   -v|--verbose           verbose (extra output).
   -h|--help              print this help.
   -f|--force          overwrite existing output filename.
 HELP
-	exit;
+	exit 0;
 }
 
 if (!$input)
 {
 	print "$program_name, $program_description\n";
-	print "Usage: docbook2odf $program_usage\n";
+	print "Usage: docbook2odf DocBook-file [-o OpenDocument-file]\n";
 	print "Try `docbook2odf --help` for more information\n";
-	exit;
+	exit 1;
 }
 
 
