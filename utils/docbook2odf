@@ -34,6 +34,7 @@ use IPC::Cmd qw(can_run);
 # Constants
 use constant PIXELS_TO_CM => 0.02644;
 use constant PIXELS_TO_IN => 0.02644 * 0.393701;
+use constant VERSION => "0.245";
 
 # Dependency checks
 
@@ -102,8 +103,7 @@ my ($input, $output, $output_dir);
 my ($help, $quiet, $verbose, $debug);
 my ($params, $force);
 
-my $program_version="0.245";
-my $program_name="docbook2odf ".$program_version;
+my $program_name="docbook2odf ".VERSION;
 my $program_description="a non-interactive DocBook to OpenDocument convertor";
 
 Getopt::Long::Configure("bundling", "ignorecase_always");
