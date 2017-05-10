@@ -49,19 +49,18 @@ At present, some code paths won't run in non-POSIX environments (e.g.
 native MS Windows), because there are Unix-like assumptions scattered
 throughout the command line invocations, e.g. an expectation that a
 **file** command line utility exists, and that a **TERM** environment
-variable exists. All of this will ultimately be replaced with use of
-the standard Perl module
+variable exists. All of the command line invocations will ultimately be
+replaced with use of the standard Perl module
 [IPC::Cmd](http://perldoc.perl.org/IPC/Cmd.html), which provides
-portability.
+portability. (Presently, external commands are also called without
+checking the return value or warning if they failed.)
 
 Further to the previous point, the code creates temp files in both an
 insecure and non-portable manner, and this should be replaced with use
-of [File::Temp](http://perldoc.perl.org/File/Temp.html).
+of [File::Temp](http://perldoc.perl.org/File/Temp.html). (And there are
+exit points due to failure to build parts of files that don't invoke
+clean up first.)
 
-Unicode support needs consideration.
+Unicode support needs consideration. (There are commented-out bits of
+code in docbook2odf concerning this.)
 
-Other, lesser issues: external commands are called without
-checking the return value or warning if they failed. There are multiple
-points of exit that aren't immediately visually apparent. There are
-whitespace issues. There are redundant commented-out blocks. There are
-comments written in the first person.
