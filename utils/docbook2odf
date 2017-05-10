@@ -160,9 +160,8 @@ my $output_file=$output;
 if (!$output)
 {
 	$output_file=$input;
-	# if I run this script from commandline
-	# the output filename is in current workdir
-	# otherwise in directory of input filename (docbook)
+	# If run from the command line, the output filename is in the
+	# current workdir, otherwise in directory of input filename
 	if ($ENV{'TERM'} && !$output_dir)
 	{
 		$output_file=~s|^.*/||;
@@ -216,8 +215,7 @@ if (-d $PATH_XSL)
 
 if (! -f $PATH_XSL)
 {
-	print "Cannot find XSL stylesheet: $PATH_XSL\n";
-	exit 1;
+	die "docbook2odf: Error: cannot find XSL stylesheet: $PATH_XSL\n";
 }
 
 # program information
@@ -242,7 +240,6 @@ if ($verbose)
 ##################################################################################
 
 # create a temporary directory
-#my $TEMP=$output_dir.'/'.$output_file.'.temp';
 my $TEMP='/tmp/docbook2odf-'.$$.'-'.$output_file.'.tmp';
 print "Creating TEMP directory ($TEMP)\n" if $debug;
 rmtree $TEMP if -e $TEMP; # delete TEMP directory if exists
@@ -293,7 +290,7 @@ $XSL = $TEMP.'/process/odf.xsl';
 # Write out an embedded version of the file. This is the same as
 # "opf.xsl" in the xsl/ directory, but embedded so we don't have to
 # figure out the path.
-open ODF, ">$XSL" or die "Cannot write ODF stylesheet ($!)";
+open ODF, ">$XSL" or die "docbook2odf: Error: cannot write ODF stylesheet ($!)";
 print ODF <<'SPLITTER';
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet
@@ -526,7 +523,7 @@ print HND $content;
 ##################################################################################
 
 # when --output-file is not defined
-# then I run autodetection of document type
+# then run autodetection of document type
 $output_file.=do
 {
 	($content=~/<office:text/) ? 't' :
@@ -538,7 +535,7 @@ $output_file.=do
 if (-e $output_dir.'/'.$output_file && !$force)
 {
 	rmtree $TEMP;
-	die "file $output_dir/$output_file exists\n";
+	die "docbook2odf: Error: file $output_dir/$output_file exists\n";
 }
 
 if (!$debug)
@@ -583,8 +580,6 @@ if (!$debug)
 
 
 
-
-
 ##################################################################################
 # FUNCTIONS
 ##################################################################################
@@ -603,7 +598,6 @@ sub img_dimensions
 	$imgfile = "$tmpdir/img-file.$ext";
 	
 	# Convert to PNG.
-	#chdir($tmpdir);
 	if ($ext eq "gif")
 	{
 		`gif2png -O $imgfile`;
