@@ -160,7 +160,7 @@ my $output_file=$output;
 if (!$output)
 {
 	$output_file=$input;
-	# If run from the command line, the output filename is in the
+	# If run from an interactive shell, the output filename is in the
 	# current workdir, otherwise in directory of input filename
 	if ($ENV{'TERM'} && !$output_dir)
 	{
