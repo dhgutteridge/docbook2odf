@@ -162,7 +162,7 @@ if (!$output)
 	$output_file=$input;
 	# If run from an interactive shell, the output filename is in the
 	# current workdir, otherwise in directory of input filename
-	if ($ENV{'TERM'} && !$output_dir)
+	if (-t STDIN && -t STDOUT && !$output_dir)
 	{
 		$output_file=~s|^.*/||;
 		$output_file=$PATH.'/'.$output_file;
