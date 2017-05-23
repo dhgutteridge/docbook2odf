@@ -106,7 +106,8 @@ my ($params, $force);
 my $program_name="docbook2odf ".VERSION;
 my $program_description="a non-interactive DocBook to OpenDocument convertor";
 
-Getopt::Long::Configure("bundling", "ignorecase_always");
+# Options set using Configure() for backwards compatibility
+Getopt::Long::Configure("auto_abbrev", "bundling", "ignorecase_always");
 
 my $result = GetOptions
 (
